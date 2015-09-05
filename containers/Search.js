@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 // components
 import Bookmark from '../components/Bookmark/Bookmark';
 import SearchGraph from '../components/SearchGraph/SearchGraph';
-import Timeline from '../components/Timeline/Timeline';
 // actions
 import { search } from '../actions';
 
@@ -30,9 +29,6 @@ class Search extends Component {
           dispatch={dispatch}
           nodesById={nodesById}
           nodes={nodes} />
-        <Timeline
-          dispatch={dispatch}
-          stateHistory={stateHistory} />
       </div>
     );
   }
