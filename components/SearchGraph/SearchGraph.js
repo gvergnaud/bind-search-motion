@@ -116,7 +116,8 @@ export default class SearchGraph extends Component {
             <div>
               {[...this.props.nodes, ...this.leavingNodes].map((nodeRef, key) => {
                 const node = this.props.nodesById[nodeRef.nodeId];
-                const { val: {x, y, scale, width, height} } = values[node.id] || this._getDefaultValue();
+                if (!values[node.id]) return;
+                const { val: {x, y, scale, width, height} } = values[node.id];
                 return (
                   <Node
                     dispatch={this.props.dispatch}
