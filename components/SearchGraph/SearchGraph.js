@@ -30,12 +30,19 @@ export default class SearchGraph extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.leavingNodes =
-      difference(this.props.nodes, nextProps.nodes)
-        .map(nodeRef => ({
-          isLeaving: true,
-          ...nodeRef
-        }));
+    this.leavingNodes = difference(
+      this.props.nodes.map(nodeRef => nodeRef.nodeId),
+      nextProps.nodes.map(nodeRef => nodeRef.nodeId)
+    )
+      .map(nodeId =>
+        [...this.props.nodes, ...nextProps.nodes].filter(nodeRef =>
+          nodeRef.nodeId === nodeId
+        )[0]
+      )
+      .map(nodeRef => ({
+        isLeaving: true,
+        ...nodeRef
+      }));
   }
 
   _getDefaultValue() {
