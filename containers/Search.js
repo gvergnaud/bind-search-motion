@@ -33,6 +33,7 @@ class Search extends Component {
         <Timeline
           dispatch={dispatch}
           nodes={nodes}
+          nodesById={nodesById}
           stateHistory={stateHistory} />
       </div>
     );

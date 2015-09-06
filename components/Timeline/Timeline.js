@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { saveState, revertHistory } from '../../actions';
 import { TransitionSpring } from 'react-motion';
+import Node from '../Node/Node';
 import './Timeline.less';
 
 export default class Timeline extends Component {
@@ -8,10 +9,40 @@ export default class Timeline extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      centerNode: false,
+      showNode: false,
+    };
+
     this._revert = this._revert.bind(this);
     this._getSpringValues = this._getSpringValues.bind(this);
     this._willEnter = this._willEnter.bind(this);
     this._willLeave = this._willLeave.bind(this);
+    this._getCenterNode = this._getCenterNode.bind(this);
+    this._showNode = this._showNode.bind(this);
+    this._hideNode = this._hideNode.bind(this);
+  }
+
+  _getCenterNode(state) {
+    return this.props.nodesById[state.filter(nodeRef => nodeRef.isCenter)[0].nodeId];
+  }
+
+  _showNode(state, x) {
+    return function() {
+      this.setState({
+        centerNode: this._getCenterNode(state),
+        centerNodeXPosition: x,
+        showNode: true,
+      });
+    }.bind(this);
+  }
+
+  _hideNode(state) {
+    return function() {
+      this.setState({
+        showNode: false,
+      });
+    }.bind(this);
   }
 
   _revert(state) {
@@ -49,6 +80,23 @@ export default class Timeline extends Component {
     };
   }
 
+  _renderPreviewNode() {
+    if (this.state.showNode && this.state.centerNode) {
+      return (
+        <Node
+          node={this.state.centerNode}
+          style={{
+            width: 100,
+            height: 100,
+            top: -65,
+            left: -45,
+            transform: `translateX(${this.state.centerNodeXPosition}px) scale(.5)`,
+          }}
+        />
+      );
+    }
+  }
+
   render() {
     const { stateHistory } = this.props;
     return (
@@ -70,9 +118,12 @@ export default class Timeline extends Component {
                     transform: `translateX(${x}px)`,
                   }}
                   onClick={this._revert(state)}
+                  onMouseEnter={this._showNode(state, x)}
+                  onMouseLeave={this._hideNode(state)}
                 />
               );
             })}
+            {this._renderPreviewNode()}
           </div>
         }
       </TransitionSpring>
