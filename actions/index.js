@@ -4,6 +4,14 @@ import getFakeApiResponse from '../utils/getFakeApiResponse';
 export const REQUEST_NODES = 'REQUEST_NODES';
 export const RECEIVE_NODES = 'RECEIVE_NODES';
 export const SELECT_NODE = 'SELECT_NODE';
+export const REVERT_HISTORY = 'REVERT_HISTORY';
+
+export function revertHistory(state) {
+  return {
+    type: REVERT_HISTORY,
+    state,
+  };
+}
 
 function selectNode(node) {
   return {

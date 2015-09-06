@@ -2,6 +2,7 @@ import {
   SELECT_NODE,
   REQUEST_NODES,
   RECEIVE_NODES,
+  REVERT_HISTORY,
 } from '../actions';
 
 export default function nodesReducer(state = [], action) {
@@ -24,6 +25,9 @@ export default function nodesReducer(state = [], action) {
         })),
         ...state,
       ];
+
+    case REVERT_HISTORY:
+      return action.state;
 
     default:
       return state;
