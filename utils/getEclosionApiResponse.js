@@ -17,7 +17,7 @@ export default function getEclosionApiResponse(node) {
 function getData() {
   return new Promise(function(resolve, reject) {
     if (!data) {
-      fetch('eclosion.json')
+      fetch('../static/eclosion.json')
         .then(res => res.json())
         .then(json => {
           data = json;
