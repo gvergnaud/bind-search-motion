@@ -21,6 +21,7 @@ export default class Timeline extends Component {
     this._getCenterNode = this._getCenterNode.bind(this);
     this._showNode = this._showNode.bind(this);
     this._hideNode = this._hideNode.bind(this);
+    this._renderNodePreview = this._renderNodePreview.bind(this);
   }
 
   _getCenterNode(state) {
@@ -30,6 +31,7 @@ export default class Timeline extends Component {
   _showNode(state, x) {
     return function() {
       this.setState({
+        activeState: state,
         centerNode: this._getCenterNode(state),
         centerNodeXPosition: x,
         showNode: true,
@@ -37,12 +39,10 @@ export default class Timeline extends Component {
     }.bind(this);
   }
 
-  _hideNode(state) {
-    return function() {
-      this.setState({
-        showNode: false,
-      });
-    }.bind(this);
+  _hideNode() {
+    this.setState({
+      showNode: false,
+    });
   }
 
   _revert(state) {
@@ -80,7 +80,7 @@ export default class Timeline extends Component {
     };
   }
 
-  _renderPreviewNode() {
+  _renderNodePreview() {
     if (this.state.showNode && this.state.centerNode) {
       return (
         <Node
@@ -121,11 +121,11 @@ export default class Timeline extends Component {
                   }}
                   onClick={this._revert(state)}
                   onMouseEnter={this._showNode(state, x)}
-                  onMouseLeave={this._hideNode(state)}
+                  onMouseLeave={this._hideNode}
                 />
               );
             })}
-            {this._renderPreviewNode()}
+            {this._renderNodePreview()}
           </div>
         }
       </TransitionSpring>
