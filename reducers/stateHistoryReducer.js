@@ -3,7 +3,9 @@ import {
   RECEIVE_NODES,
 } from '../actions';
 
-export default function stateHistoryReducer(state = {}, action) {
+const historyLimit = 10;
+
+export default function stateHistoryReducer(history = {}, action) {
   switch (action.type) {
     case RECEIVE_NODES:
       return {
@@ -19,10 +21,20 @@ export default function stateHistoryReducer(state = {}, action) {
             nodeId: action.node.id,
           },
         ],
-        ...state,
+        ...getLimitedHistory(history, historyLimit),
       };
 
     default:
-      return state;
+      return history;
   }
+}
+
+function getLimitedHistory(history, limit) {
+  return Object.keys(history)
+   .sort((a, b) => a < b)
+   .filter((timestamp, index) => index < limit)
+   .reduce((acc, timestamp) => {
+     acc[timestamp] = history[timestamp];
+     return acc;
+   }, {});
 }
