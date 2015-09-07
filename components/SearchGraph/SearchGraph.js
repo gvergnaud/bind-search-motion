@@ -126,6 +126,7 @@ export default class SearchGraph extends Component {
                     isCenter={nodeRef.isCenter}
                     style={{
                       transform: `translate(${x + this.state.baseX}px, ${y + this.state.baseY}px) scale(${scale})`,
+                      WebkitTransform: `translate(${x + this.state.baseX}px, ${y + this.state.baseY}px) scale(${scale})`,
                       width,
                       height,
                       top: - height / 2,

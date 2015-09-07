@@ -91,6 +91,7 @@ export default class Timeline extends Component {
             top: -65,
             left: -45,
             transform: `translateX(${this.state.centerNodeXPosition}px) scale(.5)`,
+            WebkitTransform: `translateX(${this.state.centerNodeXPosition}px) scale(.5)`,
           }}
         />
       );
@@ -116,6 +117,7 @@ export default class Timeline extends Component {
                   state={state}
                   style={{
                     transform: `translateX(${x}px)`,
+                    WebkitTransform: `translateX(${x}px)`,
                   }}
                   onClick={this._revert(state)}
                   onMouseEnter={this._showNode(state, x)}
