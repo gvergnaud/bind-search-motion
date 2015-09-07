@@ -24,7 +24,8 @@ function getData() {
           resolve(data);
         });
     } else {
-     resolve(data);
+      setTimeout(() => resolve(data), 50);
+      ;
     }
   });
 }
