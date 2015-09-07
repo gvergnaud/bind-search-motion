@@ -14,7 +14,7 @@ class Search extends Component {
       id: 10,
       type: 'word',
       data: {
-        name: 'Charlie Chaplin',
+        name: 'bonheur',
       }
     }));
   }
