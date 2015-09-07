@@ -1,3 +1,5 @@
+import random from './random.js';
+
 export default function getFakeApiResponse(node) {
 
   return new Promise(function(resolve, reject) {
@@ -9,14 +11,6 @@ export default function getFakeApiResponse(node) {
     }, random(20, 200));
   });
 }
-
-function random(number, end) {
-  if(!end)
-    return Math.floor(Math.random() * (number || 1));
-  else
-    return number + Math.floor(Math.random() * (end - number));
-}
-
 
 function getRandomNode() {
   const type = getRandomType();
