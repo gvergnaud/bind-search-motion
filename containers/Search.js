@@ -6,6 +6,8 @@ import SearchGraph from '../components/SearchGraph/SearchGraph';
 import Timeline from '../components/Timeline/Timeline';
 // actions
 import { search } from '../actions';
+// style
+import './Search.less';
 
 class Search extends Component {
 
@@ -22,7 +24,7 @@ class Search extends Component {
   render() {
     let { dispatch, nodesById, nodes, bookmarked, stateHistory } = this.props;
     return (
-      <div>
+      <div className="Search">
         <Bookmark
           nodesById={nodesById}
           bookmarked={bookmarked} />
