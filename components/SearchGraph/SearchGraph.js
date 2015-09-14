@@ -64,13 +64,6 @@ export default class SearchGraph extends Component {
     });
   }
 
-  _setBasePosition() {
-    this.setState({
-      baseX: window.innerWidth / 2,
-      baseY: window.innerHeight / 2,
-    });
-  }
-
   _getDefaultValue() {
     return {
       val: {
