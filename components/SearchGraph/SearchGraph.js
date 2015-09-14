@@ -71,10 +71,7 @@ export default class SearchGraph extends Component {
   }
 
   _getSpringValues(lastValues) {
-
-    var values = {};
-
-    this.props.nodes.forEach((nodeRef, index) => {
+    return this.props.nodes.reduce((values, nodeRef, index) => {
       const
         length = this.props.nodes.length,
         rayon = 100 + length * 100 / (2 * Math.PI),
@@ -88,10 +85,10 @@ export default class SearchGraph extends Component {
           scale: (2 + 3 * nodeRef.pertinence) / 5,
         },
         config: nodeRef.isCenter ? [200, 25] : this._getDefaultValue().config,
-      }
-    });
+      };
 
-    return values;
+      return values;
+    }, {});
   }
 
   _willEnter(key) {
@@ -112,7 +109,7 @@ export default class SearchGraph extends Component {
         y: currentValues[key].val.y,
         x: currentValues[key].val.x,
       },
-      config: [160, 20],
+      config: [160, 17],
     };
   }
 
@@ -126,7 +123,7 @@ export default class SearchGraph extends Component {
           willEnter={this._willEnter}>
           {(values) =>
             <div>
-              {[...this.props.nodes, ...this.leavingNodes].map((nodeRef, key) => {
+              {[...this.props.nodes, ...this.leavingNodes].map(nodeRef => {
                 const node = this.props.nodesById[nodeRef.nodeId];
 
                 if (!values[node.id]) return this._removeFromLeavingNodes(node.id);
@@ -135,7 +132,7 @@ export default class SearchGraph extends Component {
                 return (
                   <Node
                     dispatch={this.props.dispatch}
-                    key={key}
+                    key={nodeRef.nodeId}
                     node={node}
                     isCenter={nodeRef.isCenter}
                     style={{
