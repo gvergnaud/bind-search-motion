@@ -63,7 +63,7 @@ export default class SearchGraph extends Component {
 
   _getPosition(index, length, rayon) {
     const
-      angle = Math.PI * (index * 2) / length,
+      angle = Math.PI * (index * 2) / length + Math.PI / 6,
       x = rayon * Math.cos(angle),
       y = - rayon * Math.sin(angle);
 
