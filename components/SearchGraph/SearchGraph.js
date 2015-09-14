@@ -73,7 +73,11 @@ export default class SearchGraph extends Component {
     var values = {};
 
     this.props.nodes.forEach((nodeRef, index) => {
-      const position = this._getPosition(index, this.props.nodes.length);
+      const
+        length = this.props.nodes.length,
+        rayon = 100 + length * 100 / (2 * Math.PI),
+        position = this._getPosition(index, length, rayon);
+
       values[nodeRef.nodeId] = {
         val: {
           x: nodeRef.isCenter ? 0 : position.x,
