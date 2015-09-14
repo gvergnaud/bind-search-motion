@@ -29,26 +29,39 @@ export default class SearchGraph extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.leavingNodes = [
-      ...this.leavingNodes,
+      ...this.leavingNodes.filter(nodeRef =>
+        !nextProps.nodes.some((nextPropsNodeRef) =>
+          nextPropsNodeRef.nodeId === nodeRef.nodeId
+        )
+      ),
       ...difference(
-        this.props.nodes.map(nodeRef => nodeRef.nodeId),
-        nextProps.nodes.map(nodeRef => nodeRef.nodeId)
+        difference(
+          this.props.nodes.map(nodeRef => nodeRef.nodeId),
+          nextProps.nodes.map(nodeRef => nodeRef.nodeId)
+        ),
+        this.leavingNodes.map(nodeRef => nodeRef.nodeId)
       )
         .map(nodeId =>
-          [...this.props.nodes, ...nextProps.nodes].filter(nodeRef =>
+          [...this.props.nodes, ...nextProps.nodes].find(nodeRef =>
             nodeRef.nodeId === nodeId
-          )[0]
+          )
         )
         .map(nodeRef => ({
           isLeaving: true,
           ...nodeRef
         }))
     ];
-
   }
 
   _removeFromLeavingNodes(nodeId) {
-      this.leavingNodes = this.leavingNodes.filter(nodeRef => nodeRef.nodeId !== nodeId);
+    this.leavingNodes = this.leavingNodes.filter(nodeRef => nodeRef.nodeId !== nodeId);
+  }
+
+  _setBasePosition() {
+    this.setState({
+      baseX: window.innerWidth / 2,
+      baseY: window.innerHeight / 2,
+    });
   }
 
   _setBasePosition() {
