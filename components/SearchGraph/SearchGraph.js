@@ -10,11 +10,6 @@ export default class SearchGraph extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      config: [110, 30],
-      rayon: 225,
-    };
-
     this.leavingNodes = [];
 
     this._getSpringValues = this._getSpringValues.bind(this);
@@ -30,19 +25,27 @@ export default class SearchGraph extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.leavingNodes = difference(
-      this.props.nodes.map(nodeRef => nodeRef.nodeId),
-      nextProps.nodes.map(nodeRef => nodeRef.nodeId)
-    )
-      .map(nodeId =>
-        [...this.props.nodes, ...nextProps.nodes].filter(nodeRef =>
-          nodeRef.nodeId === nodeId
-        )[0]
+    this.leavingNodes = [
+      ...this.leavingNodes,
+      ...difference(
+        this.props.nodes.map(nodeRef => nodeRef.nodeId),
+        nextProps.nodes.map(nodeRef => nodeRef.nodeId)
       )
-      .map(nodeRef => ({
-        isLeaving: true,
-        ...nodeRef
-      }));
+        .map(nodeId =>
+          [...this.props.nodes, ...nextProps.nodes].filter(nodeRef =>
+            nodeRef.nodeId === nodeId
+          )[0]
+        )
+        .map(nodeRef => ({
+          isLeaving: true,
+          ...nodeRef
+        }))
+    ];
+
+  }
+
+  _removeFromLeavingNodes(nodeId) {
+      this.leavingNodes = this.leavingNodes.filter(nodeRef => nodeRef.nodeId !== nodeId);
   }
 
   _getDefaultValue() {
@@ -51,15 +54,14 @@ export default class SearchGraph extends Component {
         x: 0,
         y: 0,
         scale: 1,
-        width: 100,
-        height: 100
+        width: 125,
+        height: 125
       },
-      config: this.state.config
+      config: [110, 30]
     };
   }
 
   _getPosition(index, length, rayon) {
-    rayon = rayon || this.state.rayon;
     const
       angle = Math.PI * (index * 2) / length,
       x = rayon * Math.cos(angle),
@@ -80,13 +82,12 @@ export default class SearchGraph extends Component {
 
       values[nodeRef.nodeId] = {
         val: {
+          ...this._getDefaultValue().val,
           x: nodeRef.isCenter ? 0 : position.x,
           y: nodeRef.isCenter ? 0 : position.y,
-          width: 50 + 75 * nodeRef.pertinence,
-          height: 50 + 75 * nodeRef.pertinence,
-          scale: 1,
+          scale: (2 + 3 * nodeRef.pertinence) / 5,
         },
-        config: nodeRef.isCenter ? [200, 25] : this.state.config,
+        config: nodeRef.isCenter ? [200, 25] : this._getDefaultValue().config,
       }
     });
 
@@ -94,18 +95,25 @@ export default class SearchGraph extends Component {
   }
 
   _willEnter(key) {
-    let enterValue = this._getDefaultValue();
-    enterValue.val.scale = 0;
-    return enterValue;
+    return {
+      ...this._getDefaultValue(),
+      val: {
+        ...this._getDefaultValue().val,
+        scale: 0,
+      }
+    };
   }
 
   _willLeave(key, value, endValues, currentValues, currentSpeed) {
-    let leaveValue = this._getDefaultValue();
-    leaveValue.val.scale = 0;
-    leaveValue.val.x = currentValues[key].val.x;
-    leaveValue.val.y = currentValues[key].val.y;
-    leaveValue.config = [160, 17];
-    return leaveValue;
+    return {
+      val: {
+        ...this._getDefaultValue().val,
+        scale: 0,
+        y: currentValues[key].val.y,
+        x: currentValues[key].val.x,
+      },
+      config: [160, 20],
+    };
   }
 
   render() {
@@ -120,7 +128,9 @@ export default class SearchGraph extends Component {
             <div>
               {[...this.props.nodes, ...this.leavingNodes].map((nodeRef, key) => {
                 const node = this.props.nodesById[nodeRef.nodeId];
-                if (!values[node.id]) return;
+
+                if (!values[node.id]) return this._removeFromLeavingNodes(node.id);
+
                 const { val: {x, y, scale, width, height} } = values[node.id];
                 return (
                   <Node
