@@ -1,4 +1,5 @@
 import random from './random.js';
+import times from 'lodash/utility/times';
 
 export default function getFakeApiResponse(node) {
 
@@ -24,12 +25,15 @@ function getRandomNode() {
 
 function getRandomPropositions() {
   var propositions = [];
-  for (var i = 0 ; i < random(5, 7) ; i ++) {
-    propositions.push({
+  times(random(5, 7), () => {
+    const proposition = {
       pertinence: Math.random(),
       node: getRandomNode()
-    });
-  }
+    };
+    if (!propositions.some(prop => prop.node.id === proposition.node.id)) {
+      propositions.push(proposition);
+    }
+  });
   return propositions;
 }
 
