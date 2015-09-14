@@ -1,21 +1,21 @@
 import {
-  BOOKMARK_NODE,
-  UNBOOKMARK_NODE,
+  BOOKMARK,
+  UNBOOKMARK,
 } from '../actions';
 
 export default function bookmarkedReducer(state = [], action) {
   switch (action.type) {
-    case BOOKMARK_NODE:
+    case BOOKMARK:
       return [
         {
-          nodeId: action.node.id,
+          nodeId: action.id,
           createAt: Date.now()
         },
         ...state,
       ];
 
-    case UNBOOKMARK_NODE:
-      return state;
+    case UNBOOKMARK:
+      return state.filter(item => item.id !== action.id);
 
     default:
       return state;

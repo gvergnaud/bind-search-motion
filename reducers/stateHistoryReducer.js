@@ -3,7 +3,7 @@ import {
   RECEIVE_NODES,
 } from '../actions';
 
-const historyLimit = 10;
+const historyLimit = 15;
 
 export default function stateHistoryReducer(history = {}, action) {
   switch (action.type) {
