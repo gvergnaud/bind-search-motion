@@ -10,6 +10,7 @@ export default class SearchGraph extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {};
     this.leavingNodes = [];
 
     this._getSpringValues = this._getSpringValues.bind(this);
@@ -18,10 +19,12 @@ export default class SearchGraph extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      baseX: window.innerWidth / 2,
-      baseY: window.innerHeight / 2,
-    });
+    this._setBasePosition();
+    window.addEventListener('resize', this._setBasePosition.bind(this));
+  }
+
+  componentDidUnmount() {
+    window.removeEventListener('resize', this._setBasePosition.bind(this));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,6 +49,13 @@ export default class SearchGraph extends Component {
 
   _removeFromLeavingNodes(nodeId) {
       this.leavingNodes = this.leavingNodes.filter(nodeRef => nodeRef.nodeId !== nodeId);
+  }
+
+  _setBasePosition() {
+    this.setState({
+      baseX: window.innerWidth / 2,
+      baseY: window.innerHeight / 2,
+    });
   }
 
   _getDefaultValue() {
