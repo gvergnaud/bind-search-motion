@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Node from '../Node/Node';
 import { TransitionSpring } from 'react-motion';
-import difference from 'lodash/array/difference';
 
 import './SearchGraph.less';
 
@@ -29,28 +28,20 @@ export default class SearchGraph extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.leavingNodes = [
-      ...this.leavingNodes.filter(nodeRef =>
-        !nextProps.nodes.some((nextPropsNodeRef) =>
-          nextPropsNodeRef.nodeId === nodeRef.nodeId
-        )
-      ),
-      ...difference(
-        difference(
-          this.props.nodes.map(nodeRef => nodeRef.nodeId),
-          nextProps.nodes.map(nodeRef => nodeRef.nodeId)
-        ),
-        this.leavingNodes.map(nodeRef => nodeRef.nodeId)
+      ...new Set([
+        ...this.leavingNodes.map(nodeRef => nodeRef.nodeId),
+        ...this.props.nodes.map(nodeRef => nodeRef.nodeId),
+      ])
+    ]
+      .filter(nodeId =>
+        !nextProps.nodes.some(nodeRef => nodeRef.nodeId === nodeId)
       )
-        .map(nodeId =>
-          [...this.props.nodes, ...nextProps.nodes].find(nodeRef =>
-            nodeRef.nodeId === nodeId
-          )
-        )
-        .map(nodeRef => ({
-          isLeaving: true,
-          ...nodeRef
-        }))
-    ];
+      .map(nodeId => ({
+        ...[...this.leavingNodes, ...this.props.nodes].find(nodeRef =>
+          nodeRef.nodeId === nodeId
+        ),
+        isLeaving: true,
+      }));
   }
 
   _removeFromLeavingNodes(nodeId) {
