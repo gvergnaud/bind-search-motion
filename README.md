@@ -1,3 +1,3 @@
 # bind-search-motion
 
-Experiment for the search system of bind
+Graph visualisation experiment using React Motion
